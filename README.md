@@ -1,11 +1,16 @@
 # go-high-load-wallet console
 
+[![ci](https://github.com/Ricardoleaom/go-high-load-wallet-web/actions/workflows/ci.yml/badge.svg)](https://github.com/Ricardoleaom/go-high-load-wallet-web/actions/workflows/ci.yml)
+
 An operator console for [go-high-load-wallet](https://github.com/Ricardoleaom/go-high-load-wallet):
 sign in through the wallet's Keycloak, watch wallets, transactions,
 ledgers and reconciliation, follow the service live, and put it under
-real load from a server-side load generator.
+real load from a server-side load generator that checks the money
+against what the backend actually did.
 
-Work in progress; see the sections below as they land.
+![The dashboard, live, with a load lab run in flight](docs/img/dashboard.png)
+
+![A load lab run: offered vs completed, client-measured latency, and the money checked out](docs/img/loadlab.png)
 
 ## Layout
 
