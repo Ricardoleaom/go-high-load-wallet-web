@@ -1,3 +1,13 @@
+import { Route, Routes } from 'react-router'
+
+import { WalletDetail } from './WalletDetail'
+import { WalletsHome } from './WalletsHome'
+
 export function WalletsPage() {
-  return <h1 className="text-xl font-semibold">Wallets</h1>
+  return (
+    <Routes>
+      <Route index element={<WalletsHome />} />
+      <Route path=":id" element={<WalletDetail />} />
+    </Routes>
+  )
 }

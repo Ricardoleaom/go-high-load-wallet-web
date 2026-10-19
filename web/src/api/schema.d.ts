@@ -274,10 +274,15 @@ export interface components {
             checkedEntries: number;
         };
         /**
-         * @description `OPENING` exists only as a wallet's first ledger entry and is refused here.
+         * @description What a provider may submit; `OPENING` is refused.
          * @enum {string}
          */
-        Kind: "BET" | "WIN" | "LOSS" | "REFUND" | "ROLLBACK";
+        SubmitKind: "BET" | "WIN" | "LOSS" | "REFUND" | "ROLLBACK";
+        /**
+         * @description `OPENING` is a wallet's initial balance; it has no provider.
+         * @enum {string}
+         */
+        TransactionKind: "OPENING" | "BET" | "WIN" | "LOSS" | "REFUND" | "ROLLBACK";
         /** @enum {string} */
         Status: "PROCESSED" | "PENDING_REFERENCE" | "REJECTED" | "FAILED";
         /** @enum {string} */
@@ -292,7 +297,7 @@ export interface components {
             walletId: string;
             roundId: string;
             gameId: string;
-            kind: components["schemas"]["Kind"];
+            kind: components["schemas"]["SubmitKind"];
             money: components["schemas"]["Money"];
             /** @description Required for REFUND and ROLLBACK, the external ID of the transaction they reverse. */
             referenceExternalTransactionId?: string;
@@ -309,11 +314,13 @@ export interface components {
         Transaction: {
             /** Format: uuid */
             transactionId: string;
+            /** @description Absent for an `OPENING`. */
             providerId?: string;
+            /** @description Absent for an `OPENING`. */
             externalTransactionId?: string;
             /** Format: uuid */
             walletId: string;
-            kind: components["schemas"]["Kind"];
+            kind: components["schemas"]["TransactionKind"];
             status: components["schemas"]["Status"];
             money: components["schemas"]["Money"];
             /** @description The balance this transaction left. */

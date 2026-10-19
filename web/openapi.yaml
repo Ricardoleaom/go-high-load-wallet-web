@@ -1,4 +1,4 @@
-# Copied from github.com/Ricardoleaom/go-high-load-wallet at 51e967dc6da4855415d7a3839e579833ded6bafa
+# Copied from github.com/Ricardoleaom/go-high-load-wallet at 057231ff5db017457a32a7be411d496e9905ce81
 # by scripts/sync-openapi.sh; do not edit, sync again instead.
 openapi: 3.1.0
 info:
@@ -455,10 +455,15 @@ components:
         consistent: { type: boolean }
         checkedEntries: { type: integer }
 
-    Kind:
+    SubmitKind:
       type: string
       enum: [BET, WIN, LOSS, REFUND, ROLLBACK]
-      description: "`OPENING` exists only as a wallet's first ledger entry and is refused here."
+      description: What a provider may submit; `OPENING` is refused.
+
+    TransactionKind:
+      type: string
+      enum: [OPENING, BET, WIN, LOSS, REFUND, ROLLBACK]
+      description: "`OPENING` is a wallet's initial balance; it has no provider."
 
     Status:
       type: string
@@ -488,7 +493,7 @@ components:
         walletId: { type: string, format: uuid }
         roundId: { type: string, maxLength: 255 }
         gameId: { type: string, maxLength: 255 }
-        kind: { $ref: "#/components/schemas/Kind" }
+        kind: { $ref: "#/components/schemas/SubmitKind" }
         money: { $ref: "#/components/schemas/Money" }
         referenceExternalTransactionId:
           type: string
@@ -512,10 +517,14 @@ components:
       required: [transactionId, walletId, kind, status, money]
       properties:
         transactionId: { type: string, format: uuid }
-        providerId: { type: string }
-        externalTransactionId: { type: string }
+        providerId:
+          type: string
+          description: Absent for an `OPENING`.
+        externalTransactionId:
+          type: string
+          description: Absent for an `OPENING`.
         walletId: { type: string, format: uuid }
-        kind: { $ref: "#/components/schemas/Kind" }
+        kind: { $ref: "#/components/schemas/TransactionKind" }
         status: { $ref: "#/components/schemas/Status" }
         money: { $ref: "#/components/schemas/Money" }
         balance:
