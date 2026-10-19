@@ -13,3 +13,25 @@ export function formatMoney(money: Money): string {
   }
   return formatter.format(Number(money.amount))
 }
+
+const numberFormat = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 })
+const integerFormat = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
+const msFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+
+// formatRate shows a per-second rate with at most one decimal.
+export function formatRate(value: number): string {
+  return numberFormat.format(value)
+}
+
+export function formatCount(value: number): string {
+  return integerFormat.format(value)
+}
+
+// formatMs shows a latency, or a dash when there was nothing to measure.
+export function formatMs(value: number | null | undefined): string {
+  return value === null || value === undefined ? '—' : `${msFormat.format(value)} ms`
+}
+
+export function formatClock(iso: string): string {
+  return new Date(iso).toLocaleTimeString('en-GB')
+}
