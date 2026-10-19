@@ -1,0 +1,39 @@
+# Runs the console and its load lab beside go-high-load-wallet's own
+# stack: `make up` there first, then `docker compose up --build` here.
+# The load lab joins the backend's network to reach the API and Keycloak
+# by their service names; the console runs in the operator's browser, so
+# it reaches them by the same localhost ports the backend already
+# publishes.
+networks:
+  backend:
+    name: go-high-load-wallet_default
+    external: true
+
+services:
+  web:
+    build: ./web
+    ports:
+      - "127.0.0.1:8088:8080"
+
+  loadlab:
+    build: ./loadlab
+    networks:
+      - backend
+      - default
+    environment:
+      LOADLAB_ADDR: "0.0.0.0:8090"
+      WALLET_API_URL: http://app:8080
+      KEYCLOAK_REALM_URL: http://keycloak:8080/realms/wagering
+      # Keycloak's own fixed hostname (see go-high-load-wallet's
+      # compose.yaml) puts this issuer in every token regardless of
+      # which address it was requested from.
+      JWT_ISSUER: http://localhost:8081/realms/wagering
+      JWT_AUDIENCE: wallet-api
+      PROVIDER_ID: bench-provider
+      PROVIDER_CLIENT_ID: bench-provider
+      PROVIDER_CLIENT_SECRET: bench-provider-secret
+      INTERNAL_CLIENT_ID: bench-internal
+      INTERNAL_CLIENT_SECRET: bench-internal-secret
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:4173,http://localhost:8088}
+    ports:
+      - "127.0.0.1:8090:8090"
