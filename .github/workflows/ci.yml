@@ -28,3 +28,19 @@ jobs:
       - run: npm run build
       # The generated client must match the contract it was generated from.
       - run: npm run check:api
+
+  loadlab:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: loadlab
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.2"
+          cache-dependency-path: loadlab/go.sum
+      - run: go vet ./...
+      - run: gofmt -l . | (! grep .)
+      - run: go test -race -count=1 ./...
+      - run: go build ./...
